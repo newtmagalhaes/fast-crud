@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: .
+      tags:
+        - "fast-crud:0.1.0"
+    networks:
+      - back-end
+    ports:
+      - 8000:8000
+
+  database:
+    image: postgres:16.3
+    container_name: crud-database
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: crud
+    networks:
+      - back-end
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  back-end:
+
+volumes:
+  postgres_data:
