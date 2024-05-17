@@ -10,8 +10,12 @@ services:
       - back-end
     ports:
       - 8000:8000
+    # env_file:
+    #   - .env
+    # for demo purposes only
     environment:
-      - DATABASE_URL=postgresql+psycopg2://admin:example@database/crud
+      - DATABASE_URL=postgresql+psycopg2://pg_user:pg_password@database/crud
+      - SECRET_KEY=secret_example
     depends_on:
       database:
         condition: service_healthy
@@ -25,8 +29,8 @@ services:
       - 5432:5432
     environment:
       # for demo purposes only
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: example
+      POSTGRES_USER: pg_user
+      POSTGRES_PASSWORD: pg_password
       POSTGRES_DB: crud
     networks:
       - back-end
