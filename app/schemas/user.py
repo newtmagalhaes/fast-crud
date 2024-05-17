@@ -1,10 +1,13 @@
 from pydantic import BaseModel, EmailStr, SecretStr
 
 
-class BaseUser(BaseModel):
-    email: EmailStr
+class UpdateUser(BaseModel):
     username: str
-    nickname: str | None
+    nickname: str
+
+
+class BaseUser(UpdateUser):
+    email: EmailStr
 
 
 class RegisterUser(BaseUser):
