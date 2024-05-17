@@ -1,22 +1,30 @@
 services:
   app:
+    # segue o padrão <nome da pasta>-<nome do serviço>
+    image: fast-crud-app:0.1.0
     build:
       context: .
       tags:
-        - "fast-crud:0.1.0"
+        - "fast-crud-app:0.1.0"
     networks:
       - back-end
     ports:
       - 8000:8000
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://admin:example@database/crud
+    depends_on:
+      database:
+        condition: service_healthy
 
   database:
-    image: postgres:16.3
+    image: postgres:16.3-alpine
     container_name: crud-database
     restart: always
     shm_size: 128mb
     ports:
       - 5432:5432
     environment:
+      # for demo purposes only
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: example
       POSTGRES_DB: crud
@@ -24,6 +32,12 @@ services:
       - back-end
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_interval: 10s
 
 networks:
   back-end:
